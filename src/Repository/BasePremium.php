@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace App\Repository;
 
@@ -7,9 +7,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class BasePremium
 {
-    protected $entityManager;
+    private const TABLE = 'base_premium';
 
-    protected $tblName = 'base_premium';
+    protected $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -19,7 +19,7 @@ final class BasePremium
     public function getBasePremium(): array
     {
         try {
-            $sql = sprintf('select `base_premium` from %s LIMIT 1', $this->tblName);
+            $sql = sprintf('select `base_premium` from %s LIMIT 1', SELF::TABLE);
 
             $statement = $this->entityManager->getConnection()->prepare($sql);
 
