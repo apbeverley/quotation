@@ -28,5 +28,22 @@ class AbiCodeRating
      */
     private $ratingFactor;
 
+    public function getAbiCode(): ?string
+    {
+        return $this->abiCode;
+    }
+
+    public function getRatingFactor(): ?string
+    {
+        return $this->ratingFactor;
+    }
+
+    public function setRatingFactor(?string $ratingFactor): self
+    {
+        $this->ratingFactor = $ratingFactor;
+
+        return $this;
+    }
+
 
 }

@@ -28,5 +28,22 @@ class PostcodeRating
      */
     private $ratingFactor;
 
+    public function getPostcodeArea(): ?string
+    {
+        return $this->postcodeArea;
+    }
+
+    public function getRatingFactor(): ?string
+    {
+        return $this->ratingFactor;
+    }
+
+    public function setRatingFactor(?string $ratingFactor): self
+    {
+        $this->ratingFactor = $ratingFactor;
+
+        return $this;
+    }
+
 
 }

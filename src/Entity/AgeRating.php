@@ -28,5 +28,22 @@ class AgeRating
      */
     private $ratingFactor;
 
+    public function getAge(): ?int
+    {
+        return $this->age;
+    }
+
+    public function getRatingFactor(): ?string
+    {
+        return $this->ratingFactor;
+    }
+
+    public function setRatingFactor(?string $ratingFactor): self
+    {
+        $this->ratingFactor = $ratingFactor;
+
+        return $this;
+    }
+
 
 }

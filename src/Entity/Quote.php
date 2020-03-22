@@ -35,10 +35,10 @@ class Quote
      * @ORM\Column(name="age", type="integer", nullable=true)
      * @Assert\NotBlank()
      * @Assert\Length(
-         * min = 17,
-         * max = 120,
-         * minMessage = "The minimum age requirement not met you must be {{ limit }} yrs old to apply",
-         * maxMessage = "The maxium age limit is {{ limit }} yrs old to apply"
+     * min = 17,
+     * max = 120,
+     * minMessage = "The minimum age requirement not met you must be {{ limit }} yrs old to apply",
+     * maxMessage = "The maxium age limit is {{ limit }} yrs old to apply"
      * )
      */
     private $age;
@@ -81,4 +81,81 @@ class Quote
      * @ORM\Column(name="premium", type="decimal", precision=10, scale=2, nullable=true)
      */
     private $premium;
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setPolicyNumber(string $policyNumber): Quote
+    {
+        $this->policyNumber = $policyNumber;
+
+        return $this;
+    }
+
+    public function setAge(int $age): Quote
+    {
+        $this->age = $age;
+
+        return $this;
+    }
+
+    public function setRegNo(string $regNo): Quote
+    {
+        $this->regNo = $regNo;
+
+        return $this;
+    }
+
+    public function setPostcode(string $postcode): Quote
+    {
+        $this->postcode = $postcode;
+
+        return $this;
+    }
+
+    public function setAbiCode(string $abiCode): Quote
+    {
+        $this->abiCode = $abiCode;
+
+        return $this;
+    }
+
+    public function setPremium(float $premium): Quote
+    {
+        $this->premium = $premium;
+
+        return $this;
+    }
+
+    public function getPolicyNumber(): ?string
+    {
+        return $this->policyNumber;
+    }
+
+    public function getAge(): ?int
+    {
+        return $this->age;
+    }
+
+    public function getPostcode(): ?string
+    {
+        return $this->postcode;
+    }
+
+    public function getRegNo(): ?string
+    {
+        return $this->regNo;
+    }
+
+    public function getAbiCode(): ?string
+    {
+        return $this->abiCode;
+    }
+
+    public function getPremium(): ?string
+    {
+        return $this->premium;
+    }
 }
