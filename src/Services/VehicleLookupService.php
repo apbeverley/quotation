@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-class VehicleLookup
+class VehicleLookupService
 {
     public function getVehicleAbi(string $registration): string
     {

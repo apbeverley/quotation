@@ -34,9 +34,9 @@ class Quote
      *
      * @ORM\Column(name="age", type="integer", nullable=true)
      * @Assert\NotBlank()
-     * @Assert\Length(
+     * @Assert\Range(
      * min = 17,
-     * max = 120,
+     * max = 100,
      * minMessage = "The minimum age requirement not met you must be {{ limit }} yrs old to apply",
      * maxMessage = "The maxium age limit is {{ limit }} yrs old to apply"
      * )
@@ -49,7 +49,7 @@ class Quote
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      * @Assert\NotBlank()
      * @Assert\Regex(
-     *     pattern="/^((GIR &0AA)|((([A-PR-UWYZ][A-HK-Y]?[0-9][0-9]?)|(([A-PR-UWYZ][0-9][A-HJKSTUW])|([A-PR-UWYZ][A-HK-Y][0-9][ABEHMNPRV-Y]))) &[0-9][ABD-HJLNP-UW-Z]{2}))$/",
+     *     pattern="/^\s*(([A-Z]{1,2})[0-9][0-9A-Z]?)\s*(([0-9])[A-Z]{2})\s*$/",
      *     message="Invalid postcode"
      * )
      */
@@ -61,7 +61,7 @@ class Quote
      * @ORM\Column(name="reg_no", type="string", length=10, nullable=true)
      * @Assert\NotBlank()
      * @Assert\Regex(
-     *     pattern="/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}/",
+     *     pattern="/\b([A-Z]{3}\s?(\d{3}|\d{2}|d{1})\s?[A-Z])|([A-Z]\s?(\d{3}|\d{2}|\d{1})\s?[A-Z]{3})|(([A-HK-PRSVWY][A-HJ-PR-Y])\s?([0][2-9]|[1-9][0-9])\s?[A-HJ-PR-Z]{3})\b/",
      *     message="Invalid registration number"
      * )
      */

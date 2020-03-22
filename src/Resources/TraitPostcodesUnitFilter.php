@@ -2,7 +2,7 @@
 
 namespace App\Resources;
 
-trait Postcodes
+trait TraitPostcodesUnitFilter
 {
     private static function parse($postcode)
     {

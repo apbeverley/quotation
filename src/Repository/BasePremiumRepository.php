@@ -5,7 +5,7 @@ namespace App\Repository;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class BasePremium
+final class BasePremiumRepository
 {
     private const TABLE = 'base_premium';
 

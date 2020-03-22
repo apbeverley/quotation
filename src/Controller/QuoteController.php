@@ -1,49 +1,75 @@
 <?php
 
+
 namespace App\Controller;
 
+
 use App\Entity\Quote;
-use App\Resources\Postcodes;
-use App\Services\VehicleLookup;
+use App\Repository\BasePremiumRepository;
+use App\Repository\QuotesRepository;
+use App\Resources\TraitPostcodesUnitFilter;
+use App\Services\CalculatePremiumService;
+use App\Services\VehicleLookupService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Repository\BasePremium;
-use Symfony\Component\Validator\Constraints\Json;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class QuoteController extends AbstractController
 {
-    use Postcodes;
+    private const RATING_DEFAULT = '1';
+
+    use TraitPostcodesUnitFilter {
+        TraitPostcodesUnitFilter::getDistrict as traitPostcodeDistrict;
+    }
 
     protected $basePremium;
 
+    protected $calculatePremiumService;
+
+    protected $quotesRepository;
+
     /**
      * QuoteController constructor.
-     * @param BasePremium $basePremium
+     * @param BasePremiumRepository $basePremium
+     * @param CalculatePremiumService $calculatePremiumService
+     * @param QuotesRepository $quotesRepository
      */
-    public function __construct(BasePremium $basePremium)
+    public function __construct(BasePremiumRepository $basePremium,
+                                CalculatePremiumService $calculatePremiumService,
+                                QuotesRepository $quotesRepository)
     {
         $this->basePremium = $basePremium;
+        $this->calculatePremiumService = $calculatePremiumService;
+        $this->quotesRepository = $quotesRepository;
     }
 
     /**
      * @Route("/quote", name="quote")
      * @param request $request
      * @param ValidatorInterface $validator
-     * @param VehicleLookup $vehicleLookup
+     * @param VehicleLookupService $vehicleLookup
      * @return JsonResponse
      */
-    public function index(request $request, ValidatorInterface $validator, VehicleLookup $vehicleLookup): JsonResponse
+    public function index(request $request,
+                          ValidatorInterface $validator,
+                          VehicleLookupService $vehicleLookup): JsonResponse
     {
+        //Set default response
         $response = [
             'error' => 'failed',
-            'messages' => 'System failure'
+            'messages' => 'An error has occurred'
         ];
 
         $quote = new Quote();
+
+        $quote
+            ->setPolicyNumber(rand(1, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9))
+            ->setAge((int) $request->request->get('age'))
+            ->setPostcode(strtoupper($request->request->get('postcode')))
+            ->setRegNo(strtoupper($request->request->get('regNo')));
 
         $errors = $validator->validate($quote);
 
@@ -51,27 +77,42 @@ class QuoteController extends AbstractController
             $basePremium = $this->basePremium->getBasePremium();
 
             if (isset($basePremium['base_premium'])) {
-                $vehicleAbiCode = $vehicleLookup->getVehicleAbi('fx12xsd');
+                /* Fetch Postcode District */
+                $postcodeDistrict = $this->traitPostcodeDistrict($quote->getPostcode());
 
-                $postcodeDistrict = Postcodes::getDistrict('pe2 9ra');
+                /* Fetch Postcode ABI Code from API service (Faked for now) */
+                $vehicleAbiCode = $vehicleLookup->getVehicleAbi($quote->getRegNo());
 
-                //todo: fetch rating factors age, postcode area, and ABI code
+                /* Calculate and fetch the customer premium */
+                $customerPremium = $this->calculatePremiumService->calculatePremium(
+                    $basePremium['base_premium'],
+                    [
+                        'App:AgeRating' => [
+                            'age' => $quote->getAge()
+                        ],
+                        'App:PostcodeRating' => [
+                            'postcodeArea' => $postcodeDistrict
+                        ],
+                        'App:AbiCodeRating' => [
+                            'abiCode' => $vehicleAbiCode
+                        ]
+                    ], SELF::RATING_DEFAULT);
 
-                //todo: save quote information to the quote table
-                $response = [
-                    'base_premium' => $basePremium['base_premium'],
-                    'rating_factors' => [
-                        'age' => '',
-                        'postcode' => '',
-                        'ABI' => '',
-                    ],
-                    'total_cost' => ''
-                ];
+                /* Save the Quote */
+                $quote
+                    ->setAbiCode($vehicleAbiCode)
+                    ->setPremium($customerPremium);
+
+                if (!empty($this->quotesRepository->save($quote))) {
+                    $response = [
+                        'status' => 'success',
+                        'premium' => $customerPremium
+                    ];
+                }
             }
         } else {
             $response = [
-                'status' => 'error',
-                'message' => 'Invalid input'
+                'status' => 'Error invalid input',
             ];
         }
 
