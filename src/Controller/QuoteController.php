@@ -74,6 +74,7 @@ class QuoteController extends AbstractController
         $errors = $validator->validate($quote);
 
         if (count($errors) === 0) {
+            /* Fetch Base Premium */
             $basePremium = $this->basePremium->getBasePremium();
 
             if (isset($basePremium['base_premium'])) {
@@ -101,12 +102,12 @@ class QuoteController extends AbstractController
                 /* Save the Quote */
                 $quote
                     ->setAbiCode($vehicleAbiCode)
-                    ->setPremium($customerPremium);
+                    ->setPremium(number_format($customerPremium, 2));
 
                 if (!empty($this->quotesRepository->save($quote))) {
                     $response = [
                         'status' => 'success',
-                        'premium' => $customerPremium
+                        'premium' => $quote->getPremium()
                     ];
                 }
             }
