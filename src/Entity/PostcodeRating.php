@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\QuoteRatingInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\PostcodeRepository")
  *
  */
-class PostcodeRating
+class PostcodeRating implements QuoteRatingInterface
 {
     /**
      * @var string

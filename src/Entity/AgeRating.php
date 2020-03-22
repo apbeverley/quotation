@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\QuoteRatingInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="age_rating")
  * @ORM\Entity(repositoryClass="App\Repository\AgeRatingRepository")
  */
-class AgeRating
+class AgeRating implements QuoteRatingInterface
 {
     /**
      * @var int
