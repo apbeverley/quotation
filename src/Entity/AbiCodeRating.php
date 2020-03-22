@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AbiCodeRating
  *
  * @ORM\Table(name="abi_code_rating")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\AbiCodeRepository")
  */
 class AbiCodeRating
 {

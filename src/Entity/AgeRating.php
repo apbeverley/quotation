@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * AgeRating
  *
  * @ORM\Table(name="age_rating")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\AgeRatingRepository")
  */
 class AgeRating
 {

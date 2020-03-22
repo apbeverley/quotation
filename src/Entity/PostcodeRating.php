@@ -8,7 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
  * PostcodeRating
  *
  * @ORM\Table(name="postcode_rating")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\PostcodeRepository")
+ *
  */
 class PostcodeRating
 {

@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Quote
  *
  * @ORM\Table(name="quote")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\QuotesRepository")
  */
 class Quote
 {
