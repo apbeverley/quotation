@@ -48,12 +48,12 @@ class QuoteController extends AbstractController
 
     /**
      * @Route("/quote", name="quote")
-     * @param request $request
+     * @param Request $request
      * @param ValidatorInterface $validator
      * @param VehicleLookupService $vehicleLookup
      * @return JsonResponse
      */
-    public function index(request $request,
+    public function index(Request $request,
                           ValidatorInterface $validator,
                           VehicleLookupService $vehicleLookup): JsonResponse
     {
